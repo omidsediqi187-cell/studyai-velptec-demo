@@ -85,10 +85,10 @@ function loadState(){
     const parsed=JSON.parse(raw);
     if(!parsed||typeof parsed!=='object'||Array.isArray(parsed))return defaultState();
     return {
-      sets:Number.isFinite(parsed.sets)?Math.max(0,parsed.sets):0,
-      cards:Number.isFinite(parsed.cards)?Math.max(0,parsed.cards):0,
-      cardsTotal:Number.isFinite(parsed.cardsTotal)?Math.max(0,parsed.cardsTotal):0,
-      bestQuiz:parsed.bestQuiz===null||Number.isFinite(parsed.bestQuiz)?parsed.bestQuiz:null,
+      sets:Number.isFinite(parsed.sets)?Math.max(0,Math.floor(parsed.sets)):0,
+      cards:Number.isFinite(parsed.cards)?Math.max(0,Math.floor(parsed.cards)):0,
+      cardsTotal:Number.isFinite(parsed.cardsTotal)?Math.max(0,Math.floor(parsed.cardsTotal)):0,
+      bestQuiz:parsed.bestQuiz===null?null:(Number.isFinite(parsed.bestQuiz)?Math.min(100,Math.max(0,parsed.bestQuiz)):null),
       history:Array.isArray(parsed.history)?parsed.history.filter(x=>x&&typeof x==='object'&&!Array.isArray(x)&&typeof x.title==='string'&&x.title.trim()&&typeof x.difficulty==='string'&&Number.isFinite(x.cards)&&x.cards>=0&&(!x.mode||['easy','medium','hard'].includes(x.mode))).map(x=>({title:x.title.trim(),difficulty:x.difficulty,mode:x.mode||({EINFACH:'easy',MITTEL:'medium',PRÜFUNG:'hard'}[x.difficulty]||'medium'),cards:Math.max(0,Math.floor(x.cards))})):[]
     };
   }catch(e){return defaultState();}
